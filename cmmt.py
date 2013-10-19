@@ -21,7 +21,7 @@ jamMaps = { # ссылки на карты с включенными пробк�
     u"Центр":
         u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.597670999999%2C55.755767999958&z=11"}
 mobileMapsURL = "http://m.maps.yandex.ru" # мобильные карты для определения текущего балла пробок
-segmentMinLength = 1.5 # минимальная длина сегмента для вывода
+segmentMinLength = 1 # минимальная длина сегмента для вывода
 
 # timestamp
 print(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
@@ -75,17 +75,17 @@ for key in commuteRoutes.keys():
         segmentNameString = segmentSourceString.find("a", class_="b-serp-item__title-link").string.extract()
 
         # Отсечение «Налево», «Направо», «Улица» и другого
-        cleanPattern = u"Разворот,\s|Направо,\s|Налево,\s|Правее,\s|Левее,\s|Улица[\s|]|улица\s|\sулица|\sпроспект|проспект\s|\sшоссе"
+        cleanPattern = u"Разворот,\s|Направо,\s|Налево,\s|Правее,\s|Левее,\s|Улица\s|улица\s|\sулица|\sпроспект|проспект\s|\sшоссе"
         while re.search(cleanPattern, segmentNameString):
             segmentNameString = re.sub(cleanPattern, u"", segmentNameString)
 
         # Длина сегмента
         segmentLengthString = segmentSourceString.find("i", class_="b-serp-item__distance").string.extract()
         if re.search(u"км", segmentLengthString):
-            segmentLengthMatch = re.search(u"(\d+),(\d+)", segmentLengthString)
+            segmentLengthMatch = re.search(u"(\d+)(,|)(\d+|)", segmentLengthString)
             if segmentLengthMatch:
                 # замена разделителя и превращение во float
-                segmentLength = float(segmentLengthMatch.group(1)+"."+segmentLengthMatch.group(2))
+                segmentLength = float(segmentLengthMatch.group(1)+"."+segmentLengthMatch.group(3))
 
                 if segmentLength > segmentMinLength: # длина сегмента больше минимальной
                     # разделитель названий сегментов
@@ -102,10 +102,3 @@ for key in commuteRoutes.keys():
 
 
 
-
-#print(soupContent.prettify())
-
-#with open("export.html", "wt") as exportFile:
-#    exportFile.write(pageContent.encode("UTF-8"))
-
-# print(pageContent)
