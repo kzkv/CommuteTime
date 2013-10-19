@@ -25,29 +25,30 @@ jamMaps = { # ссылки на карты с включенными пробк�
 mobileMapsURL = "http://m.maps.yandex.ru" # мобильные карты для определения текущего балла пробок
 segmentMinLength = 1 # минимальная длина сегмента для вывода
 
-# timestamp
+# вывод: timestamp
 print(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
 
-# вывод текущего балла пробок
+# текущй балл пробок
 pageContent = requests.get(mobileMapsURL).text
 soupContent = BeautifulSoup(pageContent)
 trafficSourceString = soupContent.find("li", class_="b-traffic").b.string.extract()
 trafficSourceString = re.search(u"(\d+)(.бал*)", trafficSourceString)
 if trafficSourceString:
     trafficVal = int (trafficSourceString.group(1))
+    # вывод: пробки
     print(u"Пробки: " + str(trafficVal) + u" б.")
 
 # вывод расстояния и времени в пути
 for key in commuteRoutes.keys():
 
-    #    key = u"Берсеневская—Никулинская"
-
     pageContent = requests.get(commuteRoutes[key]).text
     soupContent = BeautifulSoup(pageContent)
 
+    # парсинг, поиск дива с информацией о длине пути
     commuteLengthSourceString = soupContent.find("div", class_="b-route-info__length").strong.string.extract()
     commuteLength = int(re.findall("\d+", commuteLengthSourceString)[0])
 
+    # парсинг, поиск дива с информацией о продолжительности пути
     commuteTimeSourceString = soupContent.find("div", class_="b-route-info__time").strong.string.extract()
     commuteTimeHours = 0
     commuteTimeMinutes = 0
@@ -97,10 +98,30 @@ for key in commuteRoutes.keys():
                         segmentList += segmentNameString
                         segmentNameStringPrev = segmentNameString # для проверки уникальности
 
-    # вывод
+    # вывод: расстояние/время/маршрут
     print(key + u": " +
           str(commuteLength) + u" км, " +
           str(commuteTime) + u" мин") + u" (" + segmentList + u")"
 
+    # парсинг, поиск изображения карты
+    if soupContent.find("img", alt=u"Карта"):
+        imgUrl = soupContent.find("img", alt=u"Карта")['src']
+    else: imgUrl = ""
 
+    # вывод: ссылка на карту
+    print(imgUrl)
+
+
+for key in jamMaps.keys():
+    pageContent = requests.get(jamMaps[key]).text
+    soupContent = BeautifulSoup(pageContent)
+
+    # парсинг, поиск изображения карты
+    if soupContent.find("img", alt=u"Карта"):
+        imgUrl = soupContent.find("img", alt=u"Карта")['src']
+    else: imgUrl = "n/a"
+
+    # вывод: ссылка на карту
+    print(key + u": ")
+    print(imgUrl)
 
