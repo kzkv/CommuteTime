@@ -8,18 +8,20 @@ import datetime
 
 commuteRoutes = { # ссылки на мобильные версии карт с маршрутами
   u"Берсеневская—Никулинская":
-      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.531599%2C55.705081797743&z=10&rtext=55.740680%2C37.608515~55.669225%2C37.454354",
+      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.740680%2C37.608515~55.669225%2C37.454354",
   u"Никулинская—Берсеневская":
-      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.531599%2C55.705081797743&z=10&rtext=55.669225%2C37.454354~55.740680%2C37.608515",
+      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.669225%2C37.454354~55.740680%2C37.608515",
   u"Берсеневская—Микрогород":
-      u"http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.740680%2C37.608515~55.871353%2C37.326996",
+      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.740680%2C37.608515~55.871353%2C37.326996",
   u"Микрогород—Берсеневская":
-      u"http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.871353%2C37.326996~55.740680%2C37.608515"}
+      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.871353%2C37.326996~55.740680%2C37.608515"}
 jamMaps = { # ссылки на карты с включенными пробками
     u"Микрогород":
-        u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.457682596679%2C55.82926917756&z=10",
+        u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10",
     u"Центр":
-        u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.597670999999%2C55.755767999958&z=11"}
+        u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11",
+    u"Юг":
+        u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10"}
 mobileMapsURL = "http://m.maps.yandex.ru" # мобильные карты для определения текущего балла пробок
 segmentMinLength = 1 # минимальная длина сегмента для вывода
 
