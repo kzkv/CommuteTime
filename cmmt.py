@@ -6,122 +6,114 @@ from bs4 import BeautifulSoup
 import time
 import datetime
 
-commuteRoutes = { # ссылки на мобильные версии карт с маршрутами
-  u"Берсеневская—Никулинская":
-      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.740680%2C37.608515~55.669225%2C37.454354",
-  u"Никулинская—Берсеневская":
-      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.669225%2C37.454354~55.740680%2C37.608515",
-  u"Берсеневская—Микрогород":
-      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.740680%2C37.608515~55.871353%2C37.326996",
-  u"Микрогород—Берсеневская":
-      u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.871353%2C37.326996~55.740680%2C37.608515"}
-jamMaps = { # ссылки на карты с включенными пробками
-    u"Микрогород":
-        u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10",
-    u"Центр":
-        u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11",
-    u"Юг":
-        u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10"}
-mobileMapsURL = "http://m.maps.yandex.ru" # мобильные карты для определения текущего балла пробок
-segmentMinLength = 1 # минимальная длина сегмента для вывода
+commute_routes = {  # ссылки на мобильные версии карт с маршрутами
+    u"Берсеневская—Никулинская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.740680%2C37.608515~55.669225%2C37.454354",
+    u"Никулинская—Берсеневская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.669225%2C37.454354~55.740680%2C37.608515",
+    u"Берсеневская—Микрогород": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.740680%2C37.608515~55.871353%2C37.326996",
+    u"Микрогород—Берсеневская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.871353%2C37.326996~55.740680%2C37.608515"}
+jam_maps = {  # ссылки на карты с включенными пробками
+    u"Микрогород": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10",
+    u"Центр": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11",
+    u"Юг": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10"}
+mobile_maps_url = "http://m.maps.yandex.ru"  # мобильные карты для определения текущего балла пробок
+segment_min_length = 1  # минимальная длина сегмента для вывода
 
 # вывод: timestamp
 print(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
 
 # текущй балл пробок
-pageContent = requests.get(mobileMapsURL).text
-soupContent = BeautifulSoup(pageContent)
-trafficSourceString = soupContent.find("li", class_="b-traffic").b.string.extract()
-trafficSourceString = re.search(u"(\d+)(.бал*)", trafficSourceString)
-if trafficSourceString:
-    trafficVal = int (trafficSourceString.group(1))
+soup_content = BeautifulSoup(requests.get(mobile_maps_url).text)
+traffic_source_string = soup_content.find("li", class_="b-traffic").b.string.extract()
+traffic_source_string = re.search(u"(\d+)(.бал*)", traffic_source_string)
+if traffic_source_string:
+    traffic_val = int(traffic_source_string.group(1))
     # вывод: пробки
-    print(u"Пробки: " + str(trafficVal) + u" б.")
+    print(u"Пробки: " + str(traffic_val) + u" б.")
 
 # вывод расстояния и времени в пути
-for key in commuteRoutes.keys():
+for key in commute_routes.keys():
 
-    pageContent = requests.get(commuteRoutes[key]).text
-    soupContent = BeautifulSoup(pageContent)
+    soup_content = BeautifulSoup(requests.get(commute_routes[key]).text)
 
     # парсинг, поиск дива с информацией о длине пути
-    commuteLengthSourceString = soupContent.find("div", class_="b-route-info__length").strong.string.extract()
-    commuteLength = int(re.findall("\d+", commuteLengthSourceString)[0])
+    commute_length_source_string = soup_content.find("div", class_="b-route-info__length").strong.string.extract()
+    commute_length = int(re.findall("\d+", commute_length_source_string)[0])
 
     # парсинг, поиск дива с информацией о продолжительности пути
-    commuteTimeSourceString = soupContent.find("div", class_="b-route-info__time").strong.string.extract()
-    commuteTimeHours = 0
-    commuteTimeMinutes = 0
+    commute_time_source_string = soup_content.find("div", class_="b-route-info__time").strong.string.extract()
+    commute_time_hours = 0
+    commute_time_minutes = 0
 
     # на всякий случай и в часах, и в минутах обрабатывается любой знак десятичного разделителя —
     # в обработку идет только «целая» часть
     # точка («любой символ) вместо \s (пробела) стоит для того, чтобы справиться с юникодными неразрывниками
-    commuteTimeHoursMatch = re.search(u"(\d+)(.\d+|)(.ч)", commuteTimeSourceString)
-    if commuteTimeHoursMatch:
-        commuteTimeHours = int(commuteTimeHoursMatch.group(1))
+    commute_time_hours_match = re.search(u"(\d+)(.\d+|)(.ч)", commute_time_source_string)
+    if commute_time_hours_match:
+        commute_time_hours = int(commute_time_hours_match.group(1))
 
-    commuteTimeMinutesMatch = re.search(u"(\d+)(.\d+|)(.мин)", commuteTimeSourceString)
-    if commuteTimeMinutesMatch:
-        commuteTimeMinutes = int(commuteTimeMinutesMatch.group(1))
+    commute_time_minutes_match = re.search(u"(\d+)(.\d+|)(.мин)", commute_time_source_string)
+    if commute_time_minutes_match:
+        commute_time_minutes = int(commute_time_minutes_match.group(1))
 
     # в часе безальтернативно 60 минут!
-    commuteTime = commuteTimeHours*60 + commuteTimeMinutes
+    commute_time = commute_time_hours * 60 + commute_time_minutes
 
     # Вывод ключевых сегментов маршрута
-    segmentList = ""
-    segmentNameStringPrev = ""
-    segmentListSource = soupContent("li", class_="b-serp-item")
-    for segmentSourceString in segmentListSource:
-        segmentSourceString = BeautifulSoup(str(segmentSourceString))
+    segment_list = ""
+    segment_name_string_prev = ""
+    segment_list_source = soup_content("li", class_="b-serp-item")
+    for segment_source_string in segment_list_source:
+        segment_source_string = BeautifulSoup(str(segment_source_string))
 
         # выделяем название сегмента
-        segmentNameString = segmentSourceString.find("a", class_="b-serp-item__title-link").string.extract()
+        segment_name_string = segment_source_string.find("a", class_="b-serp-item__title-link").string.extract()
 
         # Отсечение «Налево», «Направо», «Улица» и другого
-        cleanPattern = u"Разворот,\s|Направо,\s|Налево,\s|Правее,\s|Левее,\s|Улица\s|улица\s|\sулица|\sпроспект|проспект\s|\sшоссе"
-        while re.search(cleanPattern, segmentNameString):
-            segmentNameString = re.sub(cleanPattern, u"", segmentNameString)
+        clean_pattern = u"Разворот,\s|Направо,\s|Налево,\s|Правее,\s|Левее,\s|Улица\s|улица\s|\sулица|\sпроспект|проспект\s|\sшоссе"
+        while re.search(clean_pattern, segment_name_string):
+            segment_name_string = re.sub(clean_pattern, u"", segment_name_string)
 
         # Длина сегмента
-        segmentLengthString = segmentSourceString.find("i", class_="b-serp-item__distance").string.extract()
-        if re.search(u"км", segmentLengthString):
-            segmentLengthMatch = re.search(u"(\d+)(,|)(\d+|)", segmentLengthString)
-            if segmentLengthMatch:
+        segment_length_string = segment_source_string.find("i", class_="b-serp-item__distance").string.extract()
+        if re.search(u"км", segment_length_string):
+            segment_length_match = re.search(u"(\d+)(,|)(\d+|)", segment_length_string)
+            if segment_length_match:
                 # замена разделителя и превращение во float
-                segmentLength = float(segmentLengthMatch.group(1)+"."+segmentLengthMatch.group(3))
+                segment_length = float(segment_length_match.group(1) + "." + segment_length_match.group(3))
 
-                if segmentLength > segmentMinLength: # длина сегмента больше минимальной
+                if segment_length > segment_min_length:  # длина сегмента больше минимальной
                     # разделитель названий сегментов
 
-                    if segmentNameString != segmentNameStringPrev:
-                        if segmentList != "": segmentList += ", "
-                        segmentList += segmentNameString
-                        segmentNameStringPrev = segmentNameString # для проверки уникальности
+                    if segment_name_string != segment_name_string_prev:
+                        if segment_list != "":
+                            segment_list += ", "
+                        segment_list += segment_name_string
+                        segment_name_string_prev = segment_name_string  # для проверки уникальности
 
     # вывод: расстояние/время/маршрут
     print(key + u": " +
-          str(commuteLength) + u" км, " +
-          str(commuteTime) + u" мин") + u" (" + segmentList + u")"
+          str(commute_length) + u" км, " +
+          str(commute_time) + u" мин") + u" (" + segment_list + u")"
 
     # парсинг, поиск изображения карты
-    if soupContent.find("img", alt=u"Карта"):
-        imgUrl = soupContent.find("img", alt=u"Карта")['src']
-    else: imgUrl = ""
+    if soup_content.find("img", alt=u"Карта"):
+        img_url = soup_content.find("img", alt=u"Карта")['src']
+    else:
+        img_url = ""
 
     # вывод: ссылка на карту
-    print(imgUrl)
+    print(img_url)
 
 
-for key in jamMaps.keys():
-    pageContent = requests.get(jamMaps[key]).text
-    soupContent = BeautifulSoup(pageContent)
+for key in jam_maps.keys():
+    soup_content = BeautifulSoup(requests.get(jam_maps[key]).text)
 
     # парсинг, поиск изображения карты
-    if soupContent.find("img", alt=u"Карта"):
-        imgUrl = soupContent.find("img", alt=u"Карта")['src']
-    else: imgUrl = "n/a"
+    if soup_content.find("img", alt=u"Карта"):
+        img_url = soup_content.find("img", alt=u"Карта")['src']
+    else:
+        img_url = "n/a"
 
     # вывод: ссылка на карту
     print(key + u": ")
-    print(imgUrl)
-
+    print(img_url)

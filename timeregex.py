@@ -11,14 +11,14 @@ for reg in reg:
 
     # на всякий случай и в часах, и в минутах обрабатывается любой знак десятичного разделителя —
     # в обработку идет только «целая» часть
-    commuteTimeHoursMatch = re.search (u"(\d+)(.\d+|)(.ч)", reg)
+    commuteTimeHoursMatch = re.search(u"(\d+)(.\d+|)(.ч)", reg)
     if commuteTimeHoursMatch:
         commuteTimeHours = int(commuteTimeHoursMatch.group(1))
 
-    commuteTimeMinutesMatch = re.search (u"(\d+)(.\d+|)(.мин)", reg)
+    commuteTimeMinutesMatch = re.search(u"(\d+)(.\d+|)(.мин)", reg)
     if commuteTimeMinutesMatch:
         commuteTimeMinutes = int(commuteTimeMinutesMatch.group(1))
 
     # в часе безальтернативно 60 минут
-    commuteTime = commuteTimeHours*60 + commuteTimeMinutes
+    commuteTime = commuteTimeHours * 60 + commuteTimeMinutes
     print (commuteTime)
