@@ -4,8 +4,16 @@ import re
 from time import time
 from datetime import datetime
 
+import mongokit
 import requests
 from bs4 import BeautifulSoup
+
+from config import MONGODB_URI
+import model
+
+
+db = mongokit.Connection(MONGODB_URI)
+db.register([model.Map, model.Route, model.Commute])
 
 
 commute_routes = {  # ссылки на мобильные версии карт с маршрутами

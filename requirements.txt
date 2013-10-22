@@ -3,3 +3,4 @@ lxml==3.2.3
 
 requests==2.0.0
 
+mongokit==0.9.0
