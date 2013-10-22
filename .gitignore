@@ -37,6 +37,7 @@ nosetests.xml
 
 .DS_Store
 /.idea/
+/venv/
 
 # kzkv
 debug.py

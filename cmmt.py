@@ -1,5 +1,4 @@
 # -*- coding: UTF-8 -*-
-
 import requests
 import re
 from bs4 import BeautifulSoup
@@ -28,12 +27,11 @@ traffic_source_string = re.search(u"(\d+)(.бал*)", traffic_source_string)
 if traffic_source_string:
     traffic_val = int(traffic_source_string.group(1))
     # вывод: пробки
-    print(u"Пробки: " + str(traffic_val) + u" б.")
+    print(u"Пробки: {} б.".format(traffic_val))
 
 # вывод расстояния и времени в пути
-for key in commute_routes.keys():
-
-    soup_content = BeautifulSoup(requests.get(commute_routes[key]).text)
+for route, route_url in commute_routes.items():
+    soup_content = BeautifulSoup(requests.get(route_url).text)
 
     # парсинг, поиск дива с информацией о длине пути
     commute_length_source_string = soup_content.find("div", class_="b-route-info__length").strong.string.extract()
@@ -47,11 +45,11 @@ for key in commute_routes.keys():
     # на всякий случай и в часах, и в минутах обрабатывается любой знак десятичного разделителя —
     # в обработку идет только «целая» часть
     # точка («любой символ) вместо \s (пробела) стоит для того, чтобы справиться с юникодными неразрывниками
-    commute_time_hours_match = re.search(u"(\d+)(.\d+|)(.ч)", commute_time_source_string)
+    commute_time_hours_match = re.search(u"(\d+).*?ч", commute_time_source_string)
     if commute_time_hours_match:
         commute_time_hours = int(commute_time_hours_match.group(1))
 
-    commute_time_minutes_match = re.search(u"(\d+)(.\d+|)(.мин)", commute_time_source_string)
+    commute_time_minutes_match = re.search(u"(\d+).*?.мин", commute_time_source_string)
     if commute_time_minutes_match:
         commute_time_minutes = int(commute_time_minutes_match.group(1))
 
@@ -62,11 +60,9 @@ for key in commute_routes.keys():
     segment_list = ""
     segment_name_string_prev = ""
     segment_list_source = soup_content("li", class_="b-serp-item")
-    for segment_source_string in segment_list_source:
-        segment_source_string = BeautifulSoup(str(segment_source_string))
-
+    for segment_source in segment_list_source:
         # выделяем название сегмента
-        segment_name_string = segment_source_string.find("a", class_="b-serp-item__title-link").string.extract()
+        segment_name_string = segment_source.find("a", class_="b-serp-item__title-link").string.extract()
 
         # Отсечение «Налево», «Направо», «Улица» и другого
         clean_pattern = u"Разворот,\s|Направо,\s|Налево,\s|Правее,\s|Левее,\s|Улица\s|улица\s|\sулица|\sпроспект|проспект\s|\sшоссе"
@@ -74,16 +70,15 @@ for key in commute_routes.keys():
             segment_name_string = re.sub(clean_pattern, u"", segment_name_string)
 
         # Длина сегмента
-        segment_length_string = segment_source_string.find("i", class_="b-serp-item__distance").string.extract()
-        if re.search(u"км", segment_length_string):
+        segment_length_string = segment_source.find("i", class_="b-serp-item__distance").string.extract()
+        if u"км" in segment_length_string:
             segment_length_match = re.search(u"(\d+)(,|)(\d+|)", segment_length_string)
             if segment_length_match:
                 # замена разделителя и превращение во float
-                segment_length = float(segment_length_match.group(1) + "." + segment_length_match.group(3))
+                segment_length = float(segment_length_match.group(1).replace(',', '.'))
 
                 if segment_length > segment_min_length:  # длина сегмента больше минимальной
                     # разделитель названий сегментов
-
                     if segment_name_string != segment_name_string_prev:
                         if segment_list != "":
                             segment_list += ", "
@@ -91,29 +86,23 @@ for key in commute_routes.keys():
                         segment_name_string_prev = segment_name_string  # для проверки уникальности
 
     # вывод: расстояние/время/маршрут
-    print(key + u": " +
-          str(commute_length) + u" км, " +
-          str(commute_time) + u" мин") + u" (" + segment_list + u")"
+    print(u'{}: {} км, {} мин ({})'.format(route, commute_length, commute_time, segment_list))
 
     # парсинг, поиск изображения карты
-    if soup_content.find("img", alt=u"Карта"):
-        img_url = soup_content.find("img", alt=u"Карта")['src']
-    else:
-        img_url = ""
+    map_node = soup_content.find("img", alt=u"Карта")
+    img_url = map_node['src'] if map_node else ""
 
     # вывод: ссылка на карту
     print(img_url)
 
 
-for key in jam_maps.keys():
-    soup_content = BeautifulSoup(requests.get(jam_maps[key]).text)
+for map_name, map_url in jam_maps.items():
+    soup_content = BeautifulSoup(requests.get(map_url).text)
 
     # парсинг, поиск изображения карты
-    if soup_content.find("img", alt=u"Карта"):
-        img_url = soup_content.find("img", alt=u"Карта")['src']
-    else:
-        img_url = "n/a"
+    map_node = soup_content.find("img", alt=u"Карта")
+    img_url = map_node['src'] if map_node else ""
 
     # вывод: ссылка на карту
-    print(key + u": ")
+    print(map_name + u": ")
     print(img_url)
