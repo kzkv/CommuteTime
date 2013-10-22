@@ -1,10 +1,12 @@
 # -*- coding: UTF-8 -*-
+#from __future__ import print_function
+import re
+from time import time
+from datetime import datetime
 
 import requests
-import re
 from bs4 import BeautifulSoup
-import time
-import datetime
+
 
 commute_routes = {  # ссылки на мобильные версии карт с маршрутами
     u"Берсеневская—Никулинская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.740680%2C37.608515~55.669225%2C37.454354",
@@ -19,7 +21,7 @@ mobile_maps_url = "http://m.maps.yandex.ru"  # мобильные карты д�
 segment_min_length = 1  # минимальная длина сегмента для вывода
 
 # вывод: timestamp
-print(datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S'))
+print(datetime.fromtimestamp(time()).strftime(u'%Y-%m-%d %H:%M:%S'))
 
 # текущй балл пробок
 soup_content = BeautifulSoup(requests.get(mobile_maps_url).text)
