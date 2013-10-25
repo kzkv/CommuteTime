@@ -20,10 +20,15 @@ commute_routes = {  # ссылки на мобильные версии карт
     u"Берсеневская—Никулинская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.740680%2C37.608515~55.669225%2C37.454354",
     u"Никулинская—Берсеневская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.669225%2C37.454354~55.740680%2C37.608515",
     u"Берсеневская—Микрогород": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.740680%2C37.608515~55.871353%2C37.326996",
-    u"Микрогород—Берсеневская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.871353%2C37.326996~55.740680%2C37.608515"}
+    u"Микрогород—Берсеневская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.871353%2C37.326996~55.740680%2C37.608515",
+    u"Смоленская—Микрогород": u"http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.747345%2C37.576736~55.871077%2C37.329303",
+    u"Микрогород—Смоленская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.871077%2C37.329303~55.747345%2C37.576736",
+    u"Смоленская—Никулинская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.747345%2C37.576736~55.669225%2C37.454354",
+    u"Никулинская—Смоленская": u"http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.669225%2C37.454354~55.747345%2C37.576736",}
 jam_maps = {  # ссылки на карты с включенными пробками
     u"Микрогород": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10",
-    u"Центр": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11",
+    u"ТТК-запад": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11",
+    u"Садовое, юго-запад": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.59%2C55.74&z=12",
     u"Юг": u"http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10"}
 mobile_maps_url = "http://m.maps.yandex.ru"  # мобильные карты для определения текущего балла пробок
 segment_min_length = 1  # минимальная длина сегмента для вывода
@@ -76,7 +81,7 @@ for route, route_url in commute_routes.items():
         segment_name_string = segment_source.find("a", class_="b-serp-item__title-link").string.extract()
 
         # Отсечение «Налево», «Направо», «Улица» и другого
-        clean_pattern = u"Разворот,\s|Направо,\s|Налево,\s|Правее,\s|Левее,\s|Улица\s|улица\s|\sулица|\sпроспект|проспект\s|\sшоссе"
+        clean_pattern = u"Разворот,\s|Направо,\s|Налево,\s|Правее,\s|Левее,\s|Улица\s|улица\s|\sулица|\sпроспект|проспект\s|Проспект |\sшоссе"
         while re.search(clean_pattern, segment_name_string):
             segment_name_string = re.sub(clean_pattern, u"", segment_name_string)
 
