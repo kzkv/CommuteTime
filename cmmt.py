@@ -42,7 +42,7 @@ with open("route_urls.json") as route_urls_data:
 # вывод расстояния и времени в пути
 for route_data in route_urls:
 
-    route = model.Route()
+    route = db.Route()
 
     # вывод: timestamp
     #print(datetime.fromtimestamp(time()).strftime(u'%Y-%m-%d %H:%M:%S'))
@@ -121,9 +121,7 @@ for route_data in route_urls:
     route.commute_time = commute_time
     route.segment_list = segment_list
 
-    db.
-
-    pprint(route)
+    route.save()
 
 
 """ Отключил из-за отсутствия обработки изображения   # парсинг, поиск изображения карты
