@@ -3,6 +3,8 @@
 import re
 from time import time
 from datetime import datetime
+import json
+from pprint import pprint
 
 import mongokit
 import requests
@@ -13,7 +15,7 @@ import model
 
 
 db = mongokit.Connection(MONGODB_URI)
-db.register([model.Map, model.Route, model.Commute])
+db.register([model.Route])
 
 
 commute_routes = {  # ссылки на мобильные версии карт с маршрутами
@@ -33,21 +35,33 @@ jam_maps = {  # ссылки на карты с включенными проб�
 mobile_maps_url = "http://m.maps.yandex.ru"  # мобильные карты для определения текущего балла пробок
 segment_min_length = 1  # минимальная длина сегмента для вывода
 
-# вывод: timestamp
-print(datetime.fromtimestamp(time()).strftime(u'%Y-%m-%d %H:%M:%S'))
 
-# текущй балл пробок
-soup_content = BeautifulSoup(requests.get(mobile_maps_url).text)
-traffic_source_string = soup_content.find("li", class_="b-traffic").b.string.extract()
-traffic_source_string = re.search(u"(\d+)(.бал*)", traffic_source_string)
-if traffic_source_string:
-    traffic_val = int(traffic_source_string.group(1))
-    # вывод: пробки
-    print(u"Пробки: {} б.".format(traffic_val))
+with open("route_urls.json") as route_urls_data:
+    route_urls = json.load(route_urls_data)
 
 # вывод расстояния и времени в пути
-for route, route_url in commute_routes.items():
-    soup_content = BeautifulSoup(requests.get(route_url).text)
+for route_data in route_urls:
+
+    route = model.Route()
+
+    # вывод: timestamp
+    #print(datetime.fromtimestamp(time()).strftime(u'%Y-%m-%d %H:%M:%S'))
+    route.timestamp = int(time())
+
+    # текущй балл пробок
+    soup_content = BeautifulSoup(requests.get(mobile_maps_url).text)
+    traffic_source_string = soup_content.find("li", class_="b-traffic").b.string.extract()
+    traffic_source_string = re.search(u"(\d+)(.бал*)", traffic_source_string)
+    if traffic_source_string:
+        traffic_val = int(traffic_source_string.group(1))
+        # вывод: пробки
+        #print(u"Пробки: {} б.".format(traffic_val))
+        route.traffic_val = traffic_val
+
+    #название маршрута
+    route.route_name = route_data["routeName"]
+
+    soup_content = BeautifulSoup(requests.get(route_data["routeUrl"]).text)
 
     # парсинг, поиск дива с информацией о длине пути
     commute_length_source_string = soup_content.find("div", class_="b-route-info__length").strong.string.extract()
@@ -102,16 +116,27 @@ for route, route_url in commute_routes.items():
                         segment_name_string_prev = segment_name_string  # для проверки уникальности
 
     # вывод: расстояние/время/маршрут
-    print(u'{}: {} км, {} мин ({})'.format(route, commute_length, commute_time, segment_list))
+    #print(u'{}: {} км, {} мин ({})'.format(route_name, commute_length, commute_time, segment_list))
+    route.commute_length = commute_length
+    route.commute_time = commute_time
+    route.segment_list = segment_list
 
-    # парсинг, поиск изображения карты
+    db.
+
+    pprint(route)
+
+
+""" Отключил из-за отсутствия обработки изображения   # парсинг, поиск изображения карты
     map_node = soup_content.find("img", alt=u"Карта")
     img_url = map_node['src'] if map_node else ""
-
     # вывод: ссылка на карту
-    print(img_url)
+    #print(img_url)
+    route.route_map = img_url
+    """
 
 
+
+""" Временно выключил парсинг дополнительных карт
 for map_name, map_url in jam_maps.items():
     soup_content = BeautifulSoup(requests.get(map_url).text)
 
@@ -121,4 +146,7 @@ for map_name, map_url in jam_maps.items():
 
     # вывод: ссылка на карту
     print(map_name + u": ")
-    print(img_url)
+    print(img_url)"""
+
+
+route_urls_data.close()
