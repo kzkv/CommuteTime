@@ -35,15 +35,14 @@ for route_data in route_urls:
     route.timestamp = int(time())
 
     # текущй балл пробок
-    soup_content = BeautifulSoup(requests.get(mobile_maps_url).text)
-    if soup_content.find("li", class_="b-traffic"):
-        traffic_source_string = soup_content.find("li", class_="b-traffic").b.string.extract()
-        traffic_source_string = re.search(u"(\d+)(.бал*)", traffic_source_string)
-        if traffic_source_string:
-            traffic_val = int(traffic_source_string.group(1))
-            # вывод: пробки
-            #print(u"Пробки: {} б.".format(traffic_val))
-            route.traffic_val = traffic_val
+    soup_content = BeautifulSoup(requests.get("http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11").text)
+
+    traffic_source_string = re.search(u"(\d+)(.бал*)", soup_content.get_text())
+    if traffic_source_string:
+        traffic_val = int(traffic_source_string.group(1))
+        # вывод: пробки
+        #print(u"Пробки: {} б.".format(traffic_val))
+        route.traffic_val = traffic_val
 
     #название маршрута
     route.route_name = route_data["routeName"]
