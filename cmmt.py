@@ -36,6 +36,7 @@ for route_data in route_urls:
 
     # текущй балл пробок
     soup_content = BeautifulSoup(requests.get(mobile_maps_url).text)
+    print soup_content
     traffic_source_string = soup_content.find("li", class_="b-traffic").b.string.extract()
     traffic_source_string = re.search(u"(\d+)(.бал*)", traffic_source_string)
     if traffic_source_string:
