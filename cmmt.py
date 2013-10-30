@@ -36,14 +36,14 @@ for route_data in route_urls:
 
     # текущй балл пробок
     soup_content = BeautifulSoup(requests.get(mobile_maps_url).text)
-    print soup_content
-    traffic_source_string = soup_content.find("li", class_="b-traffic").b.string.extract()
-    traffic_source_string = re.search(u"(\d+)(.бал*)", traffic_source_string)
-    if traffic_source_string:
-        traffic_val = int(traffic_source_string.group(1))
-        # вывод: пробки
-        #print(u"Пробки: {} б.".format(traffic_val))
-        route.traffic_val = traffic_val
+    if soup_content.find("li", class_="b-traffic"):
+        traffic_source_string = soup_content.find("li", class_="b-traffic").b.string.extract()
+        traffic_source_string = re.search(u"(\d+)(.бал*)", traffic_source_string)
+        if traffic_source_string:
+            traffic_val = int(traffic_source_string.group(1))
+            # вывод: пробки
+            #print(u"Пробки: {} б.".format(traffic_val))
+            route.traffic_val = traffic_val
 
     #название маршрута
     route.route_name = route_data["routeName"]
