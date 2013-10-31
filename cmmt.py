@@ -8,6 +8,7 @@ from pprint import pprint
 
 import mongokit
 import requests
+import pytz
 from bs4 import BeautifulSoup
 
 from config import MONGODB_URI
@@ -22,20 +23,24 @@ mobile_maps_url = "http://m.maps.yandex.ru"  # мобильные карты д�
 segment_min_length = 1  # минимальная длина сегмента для вывода (в км)
 
 
+tz = pytz.timezone("Europe/Moscow")
+
+
 with open("route_urls.json") as route_urls_data:
     route_urls = json.load(route_urls_data)
 
-# вывод расстояния и времени в пути
-for route_data in route_urls:
 
+def route_output(route_data):
     route = db.Route()
+
+    # вывод: timestamp
+    #print datetime.now(pytz.timezone("Europe/Moscow")).hour
+    #print(datetime.now(pytz.timezone("Europe/Moscow")).strftime(u'%Y-%m-%d %H:%M:%S'))
+    route.timestamp = int(time())
+    route.timestamp_local = datetime.now(tz).strftime(u'%Y-%m-%d %H:%M:%S')
 
     # вывод: время дня маршрута
     route.day_time = route_data["dayTime"]
-
-    # вывод: timestamp
-    #print(datetime.fromtimestamp(time()).strftime(u'%Y-%m-%d %H:%M:%S'))
-    route.timestamp = int(time())
 
     # текущй балл пробок
     soup_content = BeautifulSoup(requests.get("http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11").text)
@@ -115,6 +120,20 @@ for route_data in route_urls:
     #print route
 
 
+# вывод расстояния и времени в пути
+for route_data in route_urls:
+
+    # московское время в часах, %H
+    current_hour = datetime.now(tz).hour
+
+    if route_data["dayTime"] == "pm" and (current_hour in (16, 23) or current_hour in (0, 2)):
+        route_output(route_data)
+    elif route_data["dayTime"] == "am" and current_hour in (6, 15):
+        route_output(route_data)
+    else:
+        pass
+
+
 """ Отключил из-за отсутствия обработки изображения   # парсинг, поиск изображения карты
     map_node = soup_content.find("img", alt=u"Карта")
     img_url = map_node['src'] if map_node else ""
@@ -122,8 +141,6 @@ for route_data in route_urls:
     #print(img_url)
     route.route_map = img_url
     """
-
-
 
 """ Временно выключил парсинг дополнительных карт
 for map_name, map_url in jam_maps.items():
@@ -136,6 +153,5 @@ for map_name, map_url in jam_maps.items():
     # вывод: ссылка на карту
     print(map_name + u": ")
     print(img_url)"""
-
 
 route_urls_data.close()

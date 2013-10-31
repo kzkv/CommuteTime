@@ -15,6 +15,7 @@ class Route(mongokit.Document):
 
     structure = {
         "timestamp": int,
+        "timestamp_local": basestring,
         "traffic_val": int,
         "route_name": basestring,
         "route_start": basestring,
