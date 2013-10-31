@@ -4,7 +4,6 @@ import re
 from time import time
 from datetime import datetime
 import json
-from pprint import pprint
 
 import mongokit
 import requests
@@ -34,8 +33,6 @@ def route_output(route_data):
     route = db.Route()
 
     # вывод: timestamp
-    #print datetime.now(pytz.timezone("Europe/Moscow")).hour
-    #print(datetime.now(pytz.timezone("Europe/Moscow")).strftime(u'%Y-%m-%d %H:%M:%S'))
     route.timestamp = int(time())
     route.timestamp_local = datetime.now(tz).strftime(u'%Y-%m-%d %H:%M:%S')
 
@@ -49,7 +46,6 @@ def route_output(route_data):
     if traffic_source_string:
         traffic_val = int(traffic_source_string.group(1))
         # вывод: пробки
-        #print(u"Пробки: {} б.".format(traffic_val))
         route.traffic_val = traffic_val
 
     #название маршрута
@@ -67,9 +63,7 @@ def route_output(route_data):
     commute_time_hours = 0
     commute_time_minutes = 0
 
-    # на всякий случай и в часах, и в минутах обрабатывается любой знак десятичного разделителя —
-    # в обработку идет только «целая» часть
-    # точка («любой символ) вместо \s (пробела) стоит для того, чтобы справиться с юникодными неразрывниками
+    # время в пути
     commute_time_hours_match = re.search(u"(\d+).*?ч", commute_time_source_string)
     if commute_time_hours_match:
         commute_time_hours = int(commute_time_hours_match.group(1))
@@ -117,7 +111,6 @@ def route_output(route_data):
     route.segment_list = segment_list
 
     route.save()
-    #print route
 
 
 # вывод расстояния и времени в пути
@@ -153,5 +146,3 @@ for map_name, map_url in jam_maps.items():
     # вывод: ссылка на карту
     print(map_name + u": ")
     print(img_url)"""
-
-route_urls_data.close()
