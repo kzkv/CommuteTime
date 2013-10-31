@@ -22,5 +22,6 @@ class Route(mongokit.Document):
         "segment_list": basestring,
         "route_map": basestring,
         "map_start": basestring,
-        "map_destination": basestring
+        "map_destination": basestring,
+        "day_time": basestring
     }

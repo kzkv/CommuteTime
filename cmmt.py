@@ -30,6 +30,9 @@ for route_data in route_urls:
 
     route = db.Route()
 
+    # вывод: время дня маршрута
+    route.day_time = route_data["dayTime"]
+
     # вывод: timestamp
     #print(datetime.fromtimestamp(time()).strftime(u'%Y-%m-%d %H:%M:%S'))
     route.timestamp = int(time())
