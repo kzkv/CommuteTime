@@ -1,65 +1,73 @@
 [
     {
-        "routeName": "Берсеневская—Никулинская",
+        "start": "Берсеневская",
+        "destination": "Никулинская",
+        "dayTime": "pm",
         "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.740680%2C37.608515~55.669225%2C37.454354",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11",
-        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10",
-        "dayTime": "pm"
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10"
     },
 
     {
-        "routeName": "Никулинская—Берсеневская",
+        "start": "Никулинская",
+        "destination": "Берсеневская",
+        "dayTime": "am",
         "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10&rtext=55.669225%2C37.454354~55.740680%2C37.608515",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10",
-        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11",
-        "dayTime": "am"
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11"
     },
 
      {
-        "routeName": "Берсеневская—Микрогород",
+        "start": "Берсеневская",
+        "destination": "Микрогород",
+        "dayTime": "pm",
         "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.740680%2C37.608515~55.871353%2C37.326996",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11",
-        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10",
-        "dayTime": "pm"
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10"
     },
 
     {
-        "routeName": "Микрогород—Берсеневская",
+        "start": "Микрогород",
+        "destination": "Берсеневская",
+        "dayTime": "am",
         "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10&rtext=55.871353%2C37.326996~55.740680%2C37.608515",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10",
-        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11",
-        "dayTime": "am"
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11"
     },
 
     {
-        "routeName": "Смоленская—Микрогород",
+        "start": "Смоленская",
+        "destination": "Микрогород",
+        "dayTime": "pm",
         "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.747345%2C37.576736~55.871077%2C37.329303",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.59%2C55.74&z=12",
-        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10",
-        "dayTime": "pm"
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10"
     },
 
     {
-        "routeName": "Микрогород—Смоленская",
+        "start": "Микрогород",
+        "destination": "Смоленская",
+        "dayTime": "am",
         "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.871077%2C37.329303~55.747345%2C37.576736",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10",
-        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.59%2C55.74&z=12",
-        "dayTime": "am"
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.59%2C55.74&z=12"
     },
 
     {
-        "routeName": "Смоленская—Никулинская",
+        "start": "Смоленская",
+        "destination": "Никулинская",
+        "dayTime": "pm",
         "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.747345%2C37.576736~55.669225%2C37.454354",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.59%2C55.74&z=12",
-        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10",
-        "dayTime": "pm"
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10"
     },
 
     {
-        "routeName": "Никулинская—Смоленская",
+        "start": "Никулинская",
+        "destination": "Смоленская",
+        "dayTime": "am",
         "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.669225%2C37.454354~55.747345%2C37.576736",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10",
-        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.59%2C55.74&z=12",
-        "dayTime": "am"
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.59%2C55.74&z=12"
     }
 ]

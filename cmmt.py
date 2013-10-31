@@ -48,7 +48,8 @@ for route_data in route_urls:
         route.traffic_val = traffic_val
 
     #название маршрута
-    route.route_name = route_data["routeName"]
+    route.route_start = route_data["start"]
+    route.route_destination = route_data["destination"]
 
     soup_content = BeautifulSoup(requests.get(route_data["routeUrl"]).text)
 
@@ -111,6 +112,7 @@ for route_data in route_urls:
     route.segment_list = segment_list
 
     route.save()
+    #print route
 
 
 """ Отключил из-за отсутствия обработки изображения   # парсинг, поиск изображения карты
