@@ -20,7 +20,8 @@ db.register([model.Route])
 
 mobile_maps_url = "http://m.maps.yandex.ru"  # мобильные карты для определения текущего балла пробок
 segment_min_length = 1  # минимальная длина сегмента для вывода (в км)
-
+am_range = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+pm_range = [16, 17, 18, 19, 20, 21, 22, 23, 0, 1]
 
 tz = pytz.timezone("Europe/Moscow")
 
@@ -110,6 +111,7 @@ def route_output(route_data):
     route.commute_time = commute_time
     route.segment_list = segment_list
 
+    #print(route)
     route.save()
 
 
@@ -119,9 +121,9 @@ for route_data in route_urls:
     # московское время в часах, %H
     current_hour = datetime.now(tz).hour
 
-    if route_data["dayTime"] == "pm" and (current_hour in (16, 23) or current_hour in (0, 2)):
+    if route_data["dayTime"] == "pm" and current_hour in pm_range:
         route_output(route_data)
-    elif route_data["dayTime"] == "am" and current_hour in (6, 15):
+    elif route_data["dayTime"] == "am" and current_hour in am_range:
         route_output(route_data)
     else:
         pass
