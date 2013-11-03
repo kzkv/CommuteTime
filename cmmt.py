@@ -26,8 +26,11 @@ pm_range = [16, 17, 18, 19, 20, 21, 22, 23, 0, 1]
 tz = pytz.timezone("Europe/Moscow")
 
 
-with open("route_urls.json") as route_urls_data:
-    route_urls = json.load(route_urls_data)
+def get_map_url(soup_content):
+    """вывод ссылки на изображение"""
+    map_node = soup_content.find("img", alt=u"Карта")
+    img_url = map_node['src'] if map_node else ""
+    return img_url
 
 
 def route_output(route_data):
@@ -41,7 +44,7 @@ def route_output(route_data):
     route.day_time = route_data["dayTime"]
 
     # текущй балл пробок
-    soup_content = BeautifulSoup(requests.get("http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.598%2C55.756&z=11").text)
+    soup_content = BeautifulSoup(requests.get(route_data["startMapUrl"]).text)
 
     traffic_source_string = re.search(u"(\d+)(.бал*)", soup_content.get_text())
     if traffic_source_string:
@@ -115,6 +118,10 @@ def route_output(route_data):
     route.save()
 
 
+# чтение конфига маршрутов
+with open("route_urls.json") as route_urls_data:
+    route_urls = json.load(route_urls_data)
+
 # вывод расстояния и времени в пути
 for route_data in route_urls:
 
@@ -130,8 +137,6 @@ for route_data in route_urls:
 
 
 """ Отключил из-за отсутствия обработки изображения   # парсинг, поиск изображения карты
-    map_node = soup_content.find("img", alt=u"Карта")
-    img_url = map_node['src'] if map_node else ""
     # вывод: ссылка на карту
     #print(img_url)
     route.route_map = img_url
