@@ -1,20 +1,21 @@
 # -*- coding: UTF-8 -*-
 #from __future__ import print_function
-import re
+import re, json
 from time import time
 from datetime import datetime
-import json
 
-import mongokit
-import requests
-import pytz
+import mongokit, requests, pytz
 from bs4 import BeautifulSoup
+import boto, urllib2, StringIO
+from boto.s3.key import Key
 
-from config import MONGODB_URI
+import config
 import model
 
+import pprint
 
-db = mongokit.Connection(MONGODB_URI)
+
+db = mongokit.Connection(config.MONGODB_URI)
 db.register([model.Route])
 
 
@@ -33,7 +34,43 @@ def get_map_url(soup_content):
     return img_url
 
 
+def upload_image(image_url, image_name):
+    """аплоад изображения"""
+    try:
+        # соединение с S3 bucket
+        connection = boto.connect_s3()
+        bucket = connection.get_bucket(config.AWS_STORAGE_BUCKET_NAME)
+        key = Key(bucket)
+
+        # присвоение имени файла
+        key.key = str(int(time())) + "-" + image_name + ".png"
+
+        # чтение
+        file_object = urllib2.urlopen(image_url)
+        file_data = StringIO.StringIO(file_object.read())
+
+        # запись
+        key.set_contents_from_file(file_data)
+
+        # права на чтение
+        key.make_public()
+
+        result_url = key.generate_url(0, expires_in_absolute=True, force_http=True, query_auth=False)
+        return result_url
+
+    except Exception, e:
+        return e
+
+
 def route_output(route_data):
+    """сбор иновывод объекта в базу"""
+
+    # забираем Beautifulsoup-объекты
+    route_soup_content = BeautifulSoup(requests.get(route_data["routeUrl"]).text)
+    start_soup_content = BeautifulSoup(requests.get(route_data["startMapUrl"]).text)
+    desti_soup_content = BeautifulSoup(requests.get(route_data["destinationMapUrl"]).text)
+
+    # объект БД
     route = db.Route()
 
     # вывод: timestamp
@@ -43,10 +80,18 @@ def route_output(route_data):
     # вывод: время дня маршрута
     route.day_time = route_data["dayTime"]
 
-    # текущй балл пробок
-    soup_content = BeautifulSoup(requests.get(route_data["startMapUrl"]).text)
+    # карты
+    route_map_url = get_map_url(route_soup_content)
+    if route_map_url <> "": route.route_map = upload_image(route_map_url, "route")
 
-    traffic_source_string = re.search(u"(\d+)(.бал*)", soup_content.get_text())
+    start_map_url = get_map_url(start_soup_content)
+    if start_map_url <> "": route.start_map = upload_image(start_map_url, "start")
+
+    desti_map_url = get_map_url(desti_soup_content)
+    if desti_map_url <> "": route.desti_map = upload_image(desti_map_url, "desti")
+
+    # текущй балл пробок
+    traffic_source_string = re.search(u"(\d+)(.бал*)", start_soup_content.get_text())
     if traffic_source_string:
         traffic_val = int(traffic_source_string.group(1))
         # вывод: пробки
@@ -56,14 +101,13 @@ def route_output(route_data):
     route.route_start = route_data["start"]
     route.route_destination = route_data["destination"]
 
-    soup_content = BeautifulSoup(requests.get(route_data["routeUrl"]).text)
 
     # парсинг, поиск дива с информацией о длине пути
-    commute_length_source_string = soup_content.find("div", class_="b-route-info__length").strong.string.extract()
+    commute_length_source_string = route_soup_content.find("div", class_="b-route-info__length").strong.string.extract()
     commute_length = int(re.findall("\d+", commute_length_source_string)[0])
 
     # парсинг, поиск дива с информацией о продолжительности пути
-    commute_time_source_string = soup_content.find("div", class_="b-route-info__time").strong.string.extract()
+    commute_time_source_string = route_soup_content.find("div", class_="b-route-info__time").strong.string.extract()
     commute_time_hours = 0
     commute_time_minutes = 0
 
@@ -82,7 +126,7 @@ def route_output(route_data):
     # Вывод ключевых сегментов маршрута
     segment_list = ""
     segment_name_string_prev = ""
-    segment_list_source = soup_content("li", class_="b-serp-item")
+    segment_list_source = route_soup_content("li", class_="b-serp-item")
     for segment_source in segment_list_source:
         # выделяем название сегмента
         segment_name_string = segment_source.find("a", class_="b-serp-item__title-link").string.extract()
@@ -114,7 +158,7 @@ def route_output(route_data):
     route.commute_time = commute_time
     route.segment_list = segment_list
 
-    #print(route)
+    #pprint.pprint(route)
     route.save()
 
 
@@ -134,22 +178,3 @@ for route_data in route_urls:
         route_output(route_data)
     else:
         pass
-
-
-""" Отключил из-за отсутствия обработки изображения   # парсинг, поиск изображения карты
-    # вывод: ссылка на карту
-    #print(img_url)
-    route.route_map = img_url
-    """
-
-""" Временно выключил парсинг дополнительных карт
-for map_name, map_url in jam_maps.items():
-    soup_content = BeautifulSoup(requests.get(map_url).text)
-
-    # парсинг, поиск изображения карты
-    map_node = soup_content.find("img", alt=u"Карта")
-    img_url = map_node['src'] if map_node else ""
-
-    # вывод: ссылка на карту
-    print(map_name + u": ")
-    print(img_url)"""

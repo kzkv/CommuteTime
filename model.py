@@ -24,7 +24,7 @@ class Route(mongokit.Document):
         "commute_time": int,
         "segment_list": basestring,
         "route_map": basestring,
-        "map_start": basestring,
-        "map_destination": basestring,
+        "start_map": basestring,
+        "desti_map": basestring,
         "day_time": basestring
     }
