@@ -75,7 +75,7 @@
         "start": "Никулинская",
         "destination": "Маросейка",
         "dayTime": "am",
-        "routeUrl": "http://m.maps.yandex.ru/&l=map%2Ctrf?rtext=55.669225%2C37.454354~55.757415%2C37.631460",
+        "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.669225%2C37.454354~55.757415%2C37.631460",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.50%2C55.71&z=10",
         "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.63%2C55.755&z=13"
     },
