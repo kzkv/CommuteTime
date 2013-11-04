@@ -69,7 +69,7 @@ def upload_image(image_url, image_name):
 
 
 def route_output(route_data):
-    """сбор иновывод объекта в базу"""
+    """сбор инфо и вывод объекта в базу"""
 
     # забираем Beautifulsoup-объекты
     route_soup_content = BeautifulSoup(requests.get(route_data["routeUrl"]).text)
