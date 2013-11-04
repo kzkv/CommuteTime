@@ -1,12 +1,17 @@
 # -*- coding: UTF-8 -*-
 #from __future__ import print_function
-import re, json
+import re
+import json
 from time import time
 from datetime import datetime
+import urllib2
+import StringIO
 
-import mongokit, requests, pytz
+import mongokit
+import requests
+import pytz
 from bs4 import BeautifulSoup
-import boto, urllib2, StringIO
+import boto
 from boto.s3.key import Key
 
 import config
@@ -83,13 +88,16 @@ def route_output(route_data):
 
     # карты
     route_map_url = get_map_url(route_soup_content)
-    if route_map_url <> "": route.route_map = upload_image(route_map_url, "route")
+    if route_map_url != "":
+        route.route_map = upload_image(route_map_url, "route")
 
     start_map_url = get_map_url(start_soup_content)
-    if start_map_url <> "": route.start_map = upload_image(start_map_url, "start")
+    if start_map_url != "":
+        route.start_map = upload_image(start_map_url, "start")
 
     desti_map_url = get_map_url(desti_soup_content)
-    if desti_map_url <> "": route.desti_map = upload_image(desti_map_url, "desti")
+    if desti_map_url != "":
+        route.desti_map = upload_image(desti_map_url, "desti")
 
     # текущй балл пробок
     traffic_source_string = re.search(u"(\d+)(.бал*)", start_soup_content.get_text())
@@ -101,7 +109,6 @@ def route_output(route_data):
     #название маршрута
     route.route_start = route_data["start"]
     route.route_destination = route_data["destination"]
-
 
     # парсинг, поиск дива с информацией о длине пути
     commute_length_source_string = route_soup_content.find("div", class_="b-route-info__length").strong.string.extract()
