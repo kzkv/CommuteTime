@@ -50,6 +50,7 @@ def upload_image(image_url, image_name):
         file_data = StringIO.StringIO(file_object.read())
 
         # запись
+        key.content_type = "image/png"
         key.set_contents_from_file(file_data)
 
         # права на чтение
