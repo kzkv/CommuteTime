@@ -105,5 +105,24 @@
         "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&rtext=55.757415%2C37.631460~55.871077%2C37.329303",
         "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.63%2C55.755&z=13",
         "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.48%2C55.80&z=10"
+    },
+
+    {
+        "start": "Усачева",
+        "destination": "Маросейка",
+        "dayTime": "am",
+        "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.560%2C55.74&z=11&rtext=55.723257%2C37.563434~55.757415%2C37.631460",
+        "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.57%2C55.725&z=13",
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.63%2C55.755&z=13"
+    },
+
+    {
+        "start": "Маросейка",
+        "destination": "Усачева",
+        "dayTime": "pm",
+        "routeUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.60%2C55.74&z=11&rtext=55.757415%2C37.631460~55.723257%2C37.563434",
+        "startMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.63%2C55.755&z=13",
+        "destinationMapUrl": "http://m.maps.yandex.ru/?l=map%2Ctrf&ll=37.57%2C55.725&z=13"
     }
+
 ]
