@@ -20,6 +20,13 @@ import model
 import pprint
 
 
+class MyPrettyPrinter(pprint.PrettyPrinter):
+    def format(self, object, context, maxlevels, level):
+        if isinstance(object, unicode):
+            return (object.encode('utf8'), True, False)
+        return pprint.PrettyPrinter.format(self, object, context, maxlevels, level)
+
+
 db = mongokit.Connection(config.MONGODB_URI)
 db.register([model.Route])
 
@@ -166,7 +173,7 @@ def route_output(route_data):
     route.commute_time = commute_time
     route.segment_list = segment_list
 
-    #pprint.pprint(route)
+    #MyPrettyPrinter().pprint(route)
     route.save()
 
 
