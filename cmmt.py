@@ -18,13 +18,7 @@ import config
 import model
 
 import pprint
-
-
-class MyPrettyPrinter(pprint.PrettyPrinter):
-    def format(self, object, context, maxlevels, level):
-        if isinstance(object, unicode):
-            return (object.encode('utf8'), True, False)
-        return pprint.PrettyPrinter.format(self, object, context, maxlevels, level)
+from prettyprinter import MyPrettyPrinter
 
 
 db = mongokit.Connection(config.MONGODB_URI)
