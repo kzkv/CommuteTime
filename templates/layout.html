@@ -2,10 +2,54 @@
 <html lang="ru">
 <head>
     <title>Commutes</title>
+    <style>
+        table, td {
+            border: 1px solid #CCC;
+            border-collapse: collapse;
+            padding: 4px;
+        }
+    </style>
+
 </head>
+
 <body>
-    <h1>Данные за день</h1>
-    {{ am_graph_data }}
+    <h1>📅&nbsp;{{given_date}}</h1>
+
+    <h2>{{route_from}} — {{route_to}}</h2>
+    <table style="width: 800px;">
+        <tr>
+            <td style="text-align:center;">🕙</td>
+            <td style="text-align:center;">🚦</td>
+            <td style="text-align:center;">🏁</td>
+            <td style="width: 600px;">Сегменты <span class="toHide">и карты</span></td>
+        </tr>
+        {% for current_route in day_routes_forth %}
+        <tr>
+            <td>{{current_route.timestamp_local}}</td>
+            <td style="text-align:center;">{{current_route.traffic_val}}</td>
+            <td style="text-align:center;">{{current_route.commute_time}} <small>мин,</small> {{current_route.commute_length}} <small>км</small></td>
+            <td>
+                <p>{{current_route.segment_list}}</p>
+                <img src="{{current_route.route_map}}">
+                <img src="{{current_route.start_map}}">
+                <img src="{{current_route.desti_map}}">
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>{{route_to}} — {{route_from}}</h2>
+    <table>
+        {% for current_route in day_routes_back %}
+        <tr>
+            <td>{{current_route.timestamp_local}}</td>
+            <td>{{current_route.traffic_val}}</td>
+            <td>{{current_route.commute_time}}</td>
+            <td>{{current_route.commute_length}}</td>
+            <td>{{current_route.segment_list}}</td>
+        </tr>
+        {% endfor %}
+    </table>
 
 </body>
 </html>
