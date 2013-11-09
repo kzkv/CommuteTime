@@ -34,13 +34,11 @@
 <body>
     <h1>📅&nbsp;{{given_date}}</h1>
 
-    <p>{{date_from_param}}</p>
-    <p>{{route_from_param}}</p>
-    <p>{{route_to_param}}</p>
-
     <a style="border-bottom: 1px dashed; text-decoration: none" id="hide_link" href="#">показать карты</a>
 
-    <h2>{{route_from}} — {{route_to}}</h2>
+    <h2 id="forth">{{route_from}} — {{route_to}}</h2>
+    <p><a style="border-bottom: 1px dashed; text-decoration: none" href="#back">перейти к маршрутам «обратно»</a></p>
+
     <table>
         {% for current_route in day_routes_forth %}
         <tr>
@@ -58,7 +56,8 @@
         {% endfor %}
     </table>
 
-    <h2>{{route_from}} — {{route_to}}</h2>
+    <h2 id="back">{{route_to}} — {{route_from}}</h2>
+    <p><a style="border-bottom: 1px dashed; text-decoration: none" href="#forth">вернуться к маршрутам «туда»</a></p>
     <table>
         {% for current_route in day_routes_back %}
         <tr>
@@ -75,6 +74,11 @@
         </tr>
         {% endfor %}
     </table>
+
+    <p>
+        к маршрутам <a style="border-bottom: 1px dashed; text-decoration: none" href="#forth">«туда»</a>,
+        <a style="border-bottom: 1px dashed; text-decoration: none" href="#back">«обратно»</a>
+    </p>
 
 </body>
 </html>
