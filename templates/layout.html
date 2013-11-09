@@ -34,6 +34,10 @@
 <body>
     <h1>📅&nbsp;{{given_date}}</h1>
 
+    <p>{{date_from_param}}</p>
+    <p>{{route_from_param}}</p>
+    <p>{{route_to_param}}</p>
+
     <a style="border-bottom: 1px dashed; text-decoration: none" id="hide_link" href="#">скрыть карты</a>
 
     <h2>{{route_from}} — {{route_to}}</h2>
@@ -41,10 +45,8 @@
         {% for current_route in day_routes_forth %}
         <tr>
             <td style="width: 120px">
-                <p>🕙&nbsp;{{current_route.timestamp_local}} </p>
-                <p>🚦&nbsp;{{current_route.traffic_val}} </p>
-                <p>🏁&nbsp;{{current_route.commute_time}} <small>мин,</small>
-                    {{current_route.commute_length}} <small>км</small></p>
+                🕙&nbsp;{{current_route.timestamp_local}},&nbsp;🚦&nbsp;{{current_route.traffic_val}} <br />
+                🏁&nbsp;{{current_route.commute_time}} <small>мин,</small> {{current_route.commute_length}} <small>км</small>
             </td>
             <td style="width: 650 px">
                 {{current_route.segment_list}} <br />
@@ -60,9 +62,11 @@
     <table>
         {% for current_route in day_routes_back %}
         <tr>
-            <td style="width: 120px">🕙&nbsp;{{current_route.timestamp_local}} <br />
+            <td style="width: 120px">
+                🕙&nbsp;{{current_route.timestamp_local}} <br />
                 🚦&nbsp;{{current_route.traffic_val}} <br />
-                🏁&nbsp;{{current_route.commute_time}} <small>мин,</small> {{current_route.commute_length}} <small>км</small></td>
+                🏁&nbsp;{{current_route.commute_time}} <small>мин,</small> {{current_route.commute_length}} <small>км</small>
+            </td>
             <td style="width: 650 px">
                 {{current_route.segment_list}} <br />
                 <img class="to-hide" src="{{current_route.route_map}}">

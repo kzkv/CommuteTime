@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 __author__ = 'kzkv'
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 import mongokit
 import model
@@ -14,6 +14,7 @@ import config
 from prettyprinter import pretty_print
 
 tz = pytz.timezone("Europe/Moscow")
+DATE_FORMAT = u"%d.%m.%Y"
 
 db = mongokit.Connection(config.MONGODB_URI)
 db.register([model.Route])
@@ -21,13 +22,11 @@ db.register([model.Route])
 app = Flask(__name__)
 
 @app.route('/')
-
-
 def output():
     # !!! переменные из параметров
-    given_date = datetime.today()
-    route_from = u"Микрогород"
-    route_to = u"Маросейка"
+    given_date = parse_date(request.args.get("date"))
+    route_from = request.args.get("start")
+    route_to = request.args.get("desti")
 
     # расчет маршрутов
     day_routes_forth = get_day_routes(given_date, route_from, route_to)
@@ -35,7 +34,7 @@ def output():
 
     # рендер шаблона
     return render_template("layout.html",
-                           given_date=given_date.strftime(u"%d.%m.%Y"),
+                           given_date=given_date.strftime(DATE_FORMAT),
                            day_routes_forth=day_routes_forth,
                            day_routes_back=day_routes_back,
                            route_from=route_from,
@@ -58,6 +57,11 @@ def get_day_routes(given_date, route_start, route_destination):
         day_routes.append(current_route)
 
     return day_routes
+
+
+def parse_date(date_from_param):
+    given_date = datetime.strptime(date_from_param, DATE_FORMAT)
+    return given_date
 
 
 #day_routes = get_day_routes(datetime.today(), u"Маросейка", u"Микрогород")
