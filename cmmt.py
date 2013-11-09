@@ -18,7 +18,7 @@ import config
 import model
 
 import pprint
-from prettyprinter import MyPrettyPrinter
+from prettyprinter import pretty_print
 
 
 db = mongokit.Connection(config.MONGODB_URI)
