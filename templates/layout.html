@@ -18,7 +18,7 @@
             });
 
             $("#hide_link").click(function() {
-                $("img.to-hide").toggle( function() {
+                $("img.to-hide").toggle(0, "linear", function() {
                     if($("img.to-hide").is(":hidden")) {
                         $("#hide_link").text("показать карты");
                     }
@@ -38,21 +38,21 @@
     <p>{{route_from_param}}</p>
     <p>{{route_to_param}}</p>
 
-    <a style="border-bottom: 1px dashed; text-decoration: none" id="hide_link" href="#">скрыть карты</a>
+    <a style="border-bottom: 1px dashed; text-decoration: none" id="hide_link" href="#">показать карты</a>
 
     <h2>{{route_from}} — {{route_to}}</h2>
-    <table style="width: 800px;">
+    <table>
         {% for current_route in day_routes_forth %}
         <tr>
             <td style="width: 120px">
-                🕙&nbsp;{{current_route.timestamp_local}},&nbsp;🚦&nbsp;{{current_route.traffic_val}} <br />
+                🕙&nbsp;{{current_route.timestamp_local}},&nbsp;🚦{{current_route.traffic_val}} <br />
                 🏁&nbsp;{{current_route.commute_time}} <small>мин,</small> {{current_route.commute_length}} <small>км</small>
             </td>
-            <td style="width: 650 px">
+            <td style="width: 720px">
                 {{current_route.segment_list}} <br />
-                <img class="to-hide" src="{{current_route.route_map}}">
-                <img class="to-hide" src="{{current_route.start_map}}">
-                <img class="to-hide" src="{{current_route.desti_map}}">
+                <img class="to-hide" style="display: none" src="{{current_route.route_map}}">
+                <img class="to-hide" style="display: none" src="{{current_route.start_map}}">
+                <img class="to-hide" style="display: none" src="{{current_route.desti_map}}">
             </td>
         </tr>
         {% endfor %}
@@ -63,15 +63,14 @@
         {% for current_route in day_routes_back %}
         <tr>
             <td style="width: 120px">
-                🕙&nbsp;{{current_route.timestamp_local}} <br />
-                🚦&nbsp;{{current_route.traffic_val}} <br />
+                🕙&nbsp;{{current_route.timestamp_local}},&nbsp;🚦{{current_route.traffic_val}} <br />
                 🏁&nbsp;{{current_route.commute_time}} <small>мин,</small> {{current_route.commute_length}} <small>км</small>
             </td>
-            <td style="width: 650 px">
+            <td style="width: 720px">
                 {{current_route.segment_list}} <br />
-                <img class="to-hide" src="{{current_route.route_map}}">
-                <img class="to-hide" src="{{current_route.start_map}}">
-                <img class="to-hide" src="{{current_route.desti_map}}">
+                <img class="to-hide" style="display: none" src="{{current_route.route_map}}">
+                <img class="to-hide" style="display: none" src="{{current_route.start_map}}">
+                <img class="to-hide" style="display: none" src="{{current_route.desti_map}}">
             </td>
         </tr>
         {% endfor %}
