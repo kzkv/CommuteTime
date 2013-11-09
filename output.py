@@ -43,8 +43,8 @@ def output():
 
 def get_day_routes(given_date, route_start, route_destination):
     # определение POSIX-таймстемпа для дня
-    day_start = int(datetime(given_date.year, given_date.month, given_date.day, 5, 0, 0, 0, tz).strftime("%s"))
-    day_end = int(datetime(given_date.year, given_date.month, given_date.day+1, 3, 0, 0, 0, tz).strftime("%s"))
+    day_start = int(datetime(given_date.year, given_date.month, given_date.day, 5, 0).strftime("%s"))
+    day_end = int(datetime(given_date.year, given_date.month, given_date.day+1, 3, 0).strftime("%s"))
 
     # выбор нужных раутов в список
     day_routes_cursors = db.Route.find({"timestamp": {"$gt": day_start, "$lt": day_end},
