@@ -121,11 +121,11 @@ def route_output(route_data):
     commute_time_minutes = 0
 
     # время в пути
-    commute_time_hours_match = re.search(u"(\d+).*?ч", commute_time_source_string)
+    commute_time_hours_match = re.search(u"(\d+).ч", commute_time_source_string)
     if commute_time_hours_match:
         commute_time_hours = int(commute_time_hours_match.group(1))
 
-    commute_time_minutes_match = re.search(u"(\d+).*?.мин", commute_time_source_string)
+    commute_time_minutes_match = re.search(u"(\d+).мин", commute_time_source_string)
     if commute_time_minutes_match:
         commute_time_minutes = int(commute_time_minutes_match.group(1))
 
@@ -167,7 +167,7 @@ def route_output(route_data):
     route.commute_time = commute_time
     route.segment_list = segment_list
 
-    #MyPrettyPrinter().pprint(route)
+    #pretty_print(route)
     route.save()
 
 
