@@ -12,10 +12,9 @@
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            $("img").error(function() {
-                $(this).hide();
+            if ($("img.to-hide").attr("src") == 'None') {
                 $(this).attr('class', 'no-link');
-            });
+            }
 
             $("#hide_link").click(function() {
                 $("img.to-hide").toggle(0, "linear", function() {
