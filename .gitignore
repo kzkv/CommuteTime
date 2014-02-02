@@ -42,3 +42,9 @@ nosetests.xml
 # kzkv
 debug.py
 /templates/debug.html
+
+*.csv
+
+*.xlsx
+
+*.xls
